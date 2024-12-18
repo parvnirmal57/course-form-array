@@ -1,0 +1,66 @@
+<h2>Course Form using formArray</h2>
+<form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="container mt-4" style="max-width: 600px; padding: 15px;">
+<div formArrayName="courses">
+<div *ngFor="let course of courses().controls; let courseIndex = index">
+    <div [formGroupName]="courseIndex">
+        <div class="form-group mb-3">
+            <div class="row">
+                <div class="form-group col-md-6">
+        <input type="text" class="form-control my-2" formControlName="courseTitle" placeholder="Enter Course Title" [ngClass]="{ 'is-invalid': course.get('courseTitle')?.invalid && submitted, 'is-valid': course.get('courseTitle')?.valid && submitted }">
+        <div *ngIf="course.get('courseTitle')?.invalid && submitted" class="text-danger">
+        
+            <div *ngIf="course.get('courseTitle')?.errors?.['required']">
+                Course Title is required
+            </div >
+            <div *ngIf="course.get('courseTitle')?.errors?.['minlength']">
+                Course Title must be 3 character long
+            </div>
+        </div>
+                </div>
+        </div> 
+        <div class="form-group col-md-6">
+        <button class="btn btn-danger mx-3" (click)="removeCourse(courseIndex)">Remove</button>
+        </div>  
+    </div>
+        <div formArrayName="chapters">
+            <div *ngFor="let chapter of courseChapters(courseIndex).controls; let chapterIndex = index">
+            <div [formGroupName]="chapterIndex">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                <input type="text" class="form-control my-2" formControlName="name" placeholder="Chapter Name" [ngClass]="{ 'is-invalid': chapter.get('name')?.invalid && submitted, 'is-valid': chapter.get('name')?.valid && submitted }">
+                <div *ngIf="chapter.get('name')?.invalid && submitted" class="text-danger">
+                    <div *ngIf="chapter.get('name')?.errors?.['required']">
+                      Chapter Name is required
+                    </div>
+                    <div *ngIf="chapter.get('name')?.errors?.['minlength']">
+                      Chapter Name must be at least 3 characters long
+                    </div>
+                </div>
+                </div>
+                <div class="form-group col-md-6">
+                <input type="text" class="form-control " formControlName="url" placeholder="Chapter URL" [ngClass]="{ 'is-invalid': chapter.get('url')?.invalid && submitted, 'is-valid': chapter.get('url')?.valid && submitted }">
+              <div *ngIf="chapter.get('url')?.invalid && submitted" class="text-danger">
+                    <div *ngIf="chapter.get('url')?.errors?.['required']">
+                        URL is required
+                       </div>
+                    <div *ngIf="chapter.get('url')?.errors?.['pattern']">
+                      Invalid URL format
+                    </div>
+                </div>
+            </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                <button class="btn btn-warning my-2" (click)="removeCourseChapter(courseIndex,chapterIndex)">Remove Chapter</button>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary me-3" (click)="addCourseChapter(courseIndex)">Add Chapter</button>
+</div>
+</div>
+<button type="button" class="btn btn-info my-3" (click)="addCourse()">Add Course</button>
+</div>
+<button type="submit"  class="btn btn-success my-3">Submit</button>
+</form>
+
+{{this.courseForm.value | json}}
